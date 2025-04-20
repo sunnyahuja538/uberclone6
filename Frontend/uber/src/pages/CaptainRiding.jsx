@@ -1,8 +1,33 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import { useGSAP } from '@gsap/react';
+import React, { useRef, useState } from 'react'
+import gsap from 'gsap'
+import { Link, useNavigate } from 'react-router-dom'
+import FinishRide from '../components/FinishRide';
+
 
 
 const CaptainRiding = () => {
+
+
+
+  const [finishRidePanel, setFinishRidePanel] = useState(false);
+  const finishRidePanelRef = useRef(null)
+
+  useGSAP(()=>{
+      if(finishRidePanel)
+      {
+      gsap.to(finishRidePanelRef.current,{
+        transform:'translateY(0)'
+      })
+    }
+    else{
+      gsap.to(finishRidePanelRef.current,{
+        transform:'translateY(100%)'
+      })
+    }
+    },[finishRidePanel]);  
+
+  const navigate=useNavigate();
   return (
     <div className='h-screen'>
         <div className='fixed flex items-center justify-between w-screen overflow-hidden'>{/*Yes — the child will appear above the parent by default,
@@ -17,7 +42,9 @@ const CaptainRiding = () => {
         <div className='h-[80%]'>
             <img className="h-full w-full object-cover" src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif"/>
         </div>
-        <div className='h-[20%] w-screen relative bg-yellow-400 flex flex-col justify-evenly items-center'>
+        <div className='h-[20%] w-screen relative bg-yellow-400 flex flex-col justify-evenly items-center'onClick={()=>{
+          setFinishRidePanel(true);
+        }}>
         <h5 className='ml-[85%] absolute top-0' onClick={()=>{
             
               }}>
@@ -29,7 +56,11 @@ const CaptainRiding = () => {
             <Link className='w-[30%] bg-green-500 text-sm text-center mt-2 font-semibold p-2 rounded-lg'>Complete Ride</Link>
         </div>
           </div>
-    </div>
+    
+    <div className='fixed h-screen w-full flex flex-col gap-2 translate-y-full bg-white bottom-0 px-3 py-6' ref={finishRidePanelRef} >
+                <FinishRide setFinishRidePanel={setFinishRidePanel}  />
+                  </div> 
+        </div>
   )
 }
 

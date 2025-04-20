@@ -16,9 +16,10 @@ module.exports.authUser=async (req,res,next)=>{
             message:'Unauthorised'
         })
     }
+    
     try{
         const decoded=jwt.verify(token,process.env.JWT_SECRET);
-        const user= await captainModel.findById(decoded._id);
+        const user= await userModel.findById(decoded._id);
         req.user=user;//set user in the request
         return next();
     }

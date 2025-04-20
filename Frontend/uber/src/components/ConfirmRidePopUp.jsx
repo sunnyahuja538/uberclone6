@@ -1,9 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
 
 const ConfirmRidePopUp = (props) => {
     const navigate=useNavigate();
+    const [otp, setOtp] = useState('')
+    const submitHandler=(e)=>{
+      e.preventDefault();
+    }
   return (
     <div className=''>
         <h5 className='ml-[85%] absolute' onClick={()=>{
@@ -11,7 +15,7 @@ const ConfirmRidePopUp = (props) => {
               }}>
                 <i className="ri-arrow-down-circle-line"></i>
                 </h5>  
-                <h3 className='text-2xl font-semibold mb-5'></h3>
+                <h3 className='text-2xl font-semibold mb-5'>Finish this Ride</h3>
                 <div className='flex items-center rounded-xl p-4 bg-yellow-400 justify-between mt-4'>
                     <div className='flex items-center gap-3'>
                         <img className='h-10 w-10 rounded-full' src=""/>
@@ -44,13 +48,21 @@ const ConfirmRidePopUp = (props) => {
               </div>
               </div>
               </div>
-              <button className='w-full bg-green-400 mt-2 font-semibold p-2 rounded-lg' onClick={()=>{
+              <form onSubmit={(e)=>{
+                submitHandler(e);
+              }} className='mt-6'>
+                <input value={otp} onChange={(e)=>{
+                  setOtp(e.target.value)
+                }
+                } type="text"placeholder='Enter OTP' className='bg-[#eee] px-12 py-2 mb-5 text-base rounded-lg w-full' />
+              <button className='w-full bg-green-400 font-mono  mt-2 font-semibold p-2 rounded-lg' onClick={()=>{
                 navigate('/captain-riding');
               }}>Confirm</button>
               <button className='w-full bg-red-500 mt-5 text-white font-semibold p-2 rounded-lg' onClick={()=>{
                 props.setConfirmRidePopUpPanel(false);
                 props.setRidePopUpPanel(false);
               }}>Cancel</button>
+              </form>
               
     </div>
   )

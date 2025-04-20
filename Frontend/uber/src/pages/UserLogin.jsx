@@ -19,7 +19,8 @@ const UserLogin = () => {
       email,
       password
     }
-    const response=await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`,userData);
+    const response=await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`,userData);//used to send request to backend (the stuff that we do using postman)
+
     if(response.status===200)
     {
       const data=await response.data;
