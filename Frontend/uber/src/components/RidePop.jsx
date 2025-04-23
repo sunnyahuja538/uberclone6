@@ -11,7 +11,7 @@ const RidePop = (props) => {
                 <h3 className='text-2xl font-semibold mb-5'>A Ride For You!</h3>
                 <div className='flex items-center rounded-xl p-4 bg-yellow-400 justify-between mt-4'>
                     <div className='flex items-center gap-3'>
-                        <img className='h-10 w-10 rounded-full' src=""/>
+                        <img className='h-10 w-10 rounded-full' src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"/>
                         <h2 className='text-lg font-medium'>Shashank</h2>
                     </div>
                     <h5 className='text-lg font-semibold'>2.2Kms</h5>

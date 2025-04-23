@@ -26,13 +26,14 @@ async function getFare(pickup,destination){
     };
 
     const fare = {
-        auto: baseFare.auto + (distanceTime.distance.value/1000 * perKmRate.auto) + (distanceTime.duration.value/60 * perMinuteRate.auto),
-        car: baseFare.car + (distanceTime.distance.value/1000 * perKmRate.car) + (distanceTime.duration.value/60 * perMinuteRate.car),
-        bike: baseFare.bike + (distanceTime.distance.value/1000 * perKmRate.bike) + (distanceTime.duration.value/60 * perMinuteRate.bike)
+        auto: Math.round(baseFare.auto + (distanceTime.distance.value/1000 * perKmRate.auto) + (distanceTime.duration.value/60 * perMinuteRate.auto)),
+        car: Math.round(baseFare.car + (distanceTime.distance.value/1000 * perKmRate.car) + (distanceTime.duration.value/60 * perMinuteRate.car)),
+        bike: Math.round(baseFare.bike + (distanceTime.distance.value/1000 * perKmRate.bike) + (distanceTime.duration.value/60 * perMinuteRate.bike))
     };
 
     return fare;
 }
+module.exports.getFare=getFare
 
 function generateOtp(num) {
     if (!num || typeof num !== 'number' || num <= 0) {

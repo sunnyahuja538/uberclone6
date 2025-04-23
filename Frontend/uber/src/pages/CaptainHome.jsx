@@ -1,9 +1,10 @@
-import React, { useRef, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import gsap from 'gsap';
 import { useNavigate } from 'react-router-dom'
 import RidePop from '../components/RidePop';
 import { useGSAP } from '@gsap/react';
 import ConfirmRidePopUp from '../components/ConfirmRidePopUp';
+import { CaptainDataContext } from '../context/CaptainContext';
 
 const CaptainHome = () => {
   const [ridePopUpPanel,setRidePopUpPanel]=useState(true);
@@ -11,6 +12,7 @@ const CaptainHome = () => {
   const ridePopUpPanelRef=useRef(null);{/*ref is passed to a html element not to a component*/}
   const confirmRidePopUpPanelRef=useRef(null);
   const navigate=useNavigate();
+  const {captain}=useContext(CaptainDataContext);
   useGSAP(()=>{
     if(ridePopUpPanel)
     {
@@ -55,7 +57,7 @@ const CaptainHome = () => {
           <div className='flex items-center justify-between'>
           <div className='flex items-center justify-start gap-3'>
               <img className='h-10 w-10 rounded-full object-cover' src="https://upload.wikimedia.org/wikipedia/en/b/bd/Doraemon_character.png"/>
-              <h4>Shashank</h4>
+              <h4 className='mb-1 capitalize font-semibold'>{captain.fullname.firstname+" "+captain.fullname.lastname}</h4>
             </div>
             <div>
               <h4 className='text-xl font-semibold'>Rs.295.20</h4>

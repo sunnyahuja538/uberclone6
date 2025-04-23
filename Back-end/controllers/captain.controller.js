@@ -59,7 +59,10 @@ module.exports.loginCaptain=async (req,res,next)=>{
         }) 
     }
     const token=captain.generateAuthToken();
-    res.cookie('token',token);
+    res.cookie('token',token,{
+        httpOnly:false
+    });
+    //localStorage.setItem('token',token);
     res.status(200).json({token,captain});
 }
 module.exports.getCaptainProfile=async(req,res,next)=>{
@@ -84,5 +87,10 @@ module.exports.logoutCaptain=async(req,res,next)=>{
 
     res.status(200).json({message:'Logout successfully'});
 }
+// Since localStorage is for client-side operations (browser), you cannot use it in Node.js (server-side). Instead, you should:
+
+// Store the token in cookies for server-side use. This is a more secure way to persist the token between requests in server-side environments.
+
+// Alternatively, you can send the token to the client and let the browser handle localStorage.
 
 

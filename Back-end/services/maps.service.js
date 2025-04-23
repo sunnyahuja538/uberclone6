@@ -37,7 +37,7 @@ module.exports.getDistanceTime=async(origin,destination)=>{
                 key:apiKey
             }
         })
-        console.log("Requesting:", response.config.url);
+        //console.log("Requesting:", response.config.url);
         if(response.data.status==='OK')
         {
             if(response.data.rows[0].elements[0].status=='ZERO_RESULTS')

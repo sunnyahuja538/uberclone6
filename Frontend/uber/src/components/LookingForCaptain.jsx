@@ -16,13 +16,13 @@ const LookingForCaptain = (props) => {
            <i className="text-lg ri-map-pin-2-fill"></i>
            <div>
              <h3 className='text-lg font-medium'>562/11-A</h3>
-             <p className='text-base -mt-1 text-gray-600'>Kankariya Talab,Ahmedabad</p>
+             <p className='text-base -mt-1 text-gray-600'>{props.pickup}</p>
            </div>
            </div>
            <div className='flex items-center border-b-2 border-gray-200 gap-5 p-3'>
            <i className   ="ri-currency-line"></i>
            <div>
-             <h3 className='text-lg font-medium'>Rs.193.20</h3>
+             <h3 className='text-lg font-medium'>Rs.{props.fare[props.vehicleType]}</h3>
              <p className='text-base -mt-1 text-gray-600'>Cash</p>
            </div>
            </div>
@@ -30,7 +30,7 @@ const LookingForCaptain = (props) => {
            <i className="text-lg ri-map-pin-2-fill"></i>
            <div>
              <h3 className='text-lg font-medium'>562/11-A</h3>
-             <p className='text-base -mt-1 text-gray-600'>Kankariya Talab,Ahmedabad</p>
+             <p className='text-base -mt-1 text-gray-600'>{props.destination}</p>
            </div>
            </div>
            </div>
