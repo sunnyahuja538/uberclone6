@@ -1,6 +1,7 @@
 const mapService=require('./maps.service')
 const rideModel=require('../models/ride.model');
 const crypto = require('crypto');
+const { sendMessageToSocketId } = require('../socket');
 async function getFare(pickup,destination){
     if(!pickup||!destination)
     {
@@ -82,4 +83,105 @@ user,pickup,destination,vehicleType
     })
     return ride;
 }
+module.exports.confirmRide=async({
+    rideId,captainId
+})=>{
+    if(!rideId){
+        throw new Error('Ride does not exist');
+    }
+    const ride=await rideModel.findOneAndUpdate({
+        _id:rideId
+    }
+
+    ,{
+        status:'accepted',
+        captain:captainId
+    },{new:true}).populate('captain').populate('user').select('+otp');
+    return ride;
+}
+module.exports.startRide=async({rideId,otp,captain})=>{
+    if(!rideId||!otp)
+    {
+        throw new Error('ride id and otp are required')
+    }
+    const ride=await rideModel.findOneAndUpdate({
+        _id:rideId
+    },{
+        captain:captain._id
+    },{new:true}).populate('user').populate('captain').select('+otp');
+    if(!ride)
+    {
+        throw new Error('Ride not found')
+    }
+    if(ride.status!=='accepted')
+    {
+        throw new Error('Ride not accepted')
+    }
+    if(ride.otp!==otp)
+    {
+        throw new Error('Invalid OTP')
+    }
+    await rideModel.findOneAndUpdate({
+        _id:rideId
+    },{
+        status:'ongoing'
+    })
+    ride.status='ongoing'
+    // sendMessageToSocketId(ride.user.socketId,{
+    //     event:'ride-started',
+    //     data:ride
+    //})
+    return ride;
+}
+module.exports.endRide=async({rideId,captain})=>{
+    if(!rideId){
+        throw new Error('Ride id is required')
+    }
+    const ride=await rideModel.findOne({
+        _id:rideId,
+        captain:captain._id
+    }).populate('user').populate('captain').select('+otp');
+    if(!ride){
+        throw new Error('Ride not found');
+    }
+    if(ride.status!=='ongoing'){
+        throw new Error('Ride not ongoing');
+    }
+    await rideModel.findOneAndUpdate({
+        _id:rideId
+    },{
+        status:'completed'    
+    })
+    return ride;
+}
 //when we call a async function then also we will use await
+// 1. useState & Re-rendering:
+// State Variables in React (like useState) persist their values across re-renders unless you update them. When a component re-renders, React will re-initialize state values based on the last update.
+
+// If you want a state to reset after every render, you need to manually reset the state during the render cycle (e.g., by calling setState() inside useEffect or a handler).
+
+// 2. Socket Events & Payload:
+// Socket Events handle data for the current event cycle. Once an event is emitted, its payload is processed for that specific trigger.
+
+// If you use socket.on, the payload from the server will be passed on each event trigger. If the event handler doesn't change or get re-attached on each render, the payload will stay the same for that render.
+
+// 3. Using try-catch:
+// Without try-catch, unhandled errors can cause the server to crash or fail unexpectedly, especially when working with asynchronous operations.
+
+// Using try-catch ensures that even if an error occurs (e.g., in async code like axios requests), the error is caught and handled without crashing the application. You can log errors, provide feedback, or handle the error gracefully.
+
+// In essence:
+
+// useState persists its value, but can be re-initialized based on user interaction or re-render triggers.
+
+// Socket.io will deliver data to listeners during the current cycle, but it does not "remember" data between events.
+
+// try-catch is essential for preventing crashes and managing errors gracefully in your app.
+
+
+
+
+
+
+
+

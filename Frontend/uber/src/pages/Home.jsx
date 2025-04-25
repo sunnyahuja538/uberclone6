@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import axios from 'axios'; // Added axios import
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
@@ -8,8 +8,29 @@ import VehiclePanel from '../components/VehiclePanel';
 import ConfirmRide from '../components/ConfirmRide';
 import WaitForCaptain from '../components/WaitForCaptain';
 import LookingForCaptain from '../components/LookingForCaptain';
-
+import { SocketContextData } from '../context/SocketContext';
+import {UserDataContext} from '../context/UserContext'
+import { useNavigate } from 'react-router-dom';
+import LiveTracking from '../components/LiveTracking';
 const Home = () => {
+  const navigate=useNavigate();
+  const {socket,sendMessage,recieveMessage}=useContext(SocketContextData);
+  const {user,setUser}=useContext(UserDataContext);
+  //both will run don't simultaneously on mount
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+  if (storedUser) {
+    setUser(JSON.parse(storedUser));
+  }
+  }, [])
+  
+  useEffect(()=>{
+    
+    sendMessage("join",{
+      userType:"user",
+      userId:user._id
+    })
+  },[user])
 
   const [pickup, setPickup] = useState('');
   const [destination, setDestination] = useState('');
@@ -20,7 +41,8 @@ const Home = () => {
   const [confirm, setConfirm] = useState(false);
   const [waiting, setWaiting] = useState(false);
   const [vehicleFound, setVehicleFound] = useState(false);
-  const [vehicleType, setvehicleType] = useState()
+  const [vehicleType, setvehicleType] = useState();
+  const [ride, setRide] = useState()
 
   const vehicleFoundRef = useRef(null);
   const confirmRef = useRef(null);
@@ -29,6 +51,36 @@ const Home = () => {
   const bgRef = useRef(null);
   const vehicleRef = useRef(null);
   const waitingRef = useRef(null);
+  useEffect(()=>{
+    socket.on('ride-confirmed',(ride)=>{
+      setWaiting(true);
+      setVehicleFound(false);
+      setRide(ride);
+      console.log("hello");
+    })
+    return ()=>{
+      socket.off('ride-confirmed',(ride)=>{
+      setWaiting(true);
+        setVehicleFound(false);
+        setRide(ride);
+        console.log("hello");
+       
+      })
+    }
+  },[])
+  useEffect(() => {
+    socket.on('ride-started', (ride) => {
+      console.log("Ride started event received:", ride);
+      setWaiting(false);
+      navigate('/riding',{state:{ride:ride}}); // Ensure this is called
+      setRide(ride);
+    });
+
+    return () => {
+      socket.off('ride-started'); // Ensure proper cleanup
+    };
+  }, []);
+  
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -37,7 +89,7 @@ const Home = () => {
   {
           setVehicle(true);
           setPanel(false);
-          const response=await axios.get(`http://localhost:4000/rides/get-fare`,{
+          const response=await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/get-fare`,{
             params:{
               pickup,
               destination
@@ -51,7 +103,7 @@ const Home = () => {
   }
   const createRide=async()=>{
     console.log('Token:', localStorage.getItem('token'));
-    const response=await axios.post('http://localhost:4000/rides/create',
+    const response=await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/create`,
       {
         pickup,
         destination,
@@ -63,7 +115,7 @@ const Home = () => {
       }
     })
     //console.log('Token:', localStorage.getItem('token'));
-    console.log(response.data);
+    //console.log(response.data);
   }
   
 
@@ -73,7 +125,7 @@ const Home = () => {
       {
         return;
       }
-      const response = await axios.get(`http://localhost:4000/maps/get-suggestions?input=${query}`,{
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/maps/get-suggestions?input=${query}`,{
         headers:{
           Authorization:`Bearer ${localStorage.getItem('token')}`/*You always need to manually pass the token in the headers when using fetch, axios, or any HTTP client — unless you're using a library or browser mechanism that handles it for you (like cookies with HttpOnly flags).*/
         }
@@ -140,12 +192,14 @@ const Home = () => {
     if (vehicleFound) {
       gsap.to(vehicleFoundRef.current, {
         transform: 'translateY(0)',
+        
         opacity:1
       });
     } else {
       gsap.to(vehicleFoundRef.current, {
-        transform: 'translateY(100%)',
-        opacity:0
+        transform: 'translateY(200%)',
+        
+        opacity:1
       });
     }
   }, [vehicleFound]);
@@ -170,10 +224,8 @@ const Home = () => {
       />
 
       <div className='h-screen w-screen' ref={bgRef}>
-        <img
-          className='h-3/5 w-full'
-          src='https://t3.ftcdn.net/jpg/07/28/30/26/360_F_728302620_Xddnf5Cl0K1ACZurd6yByUzHiHMMIoe6.jpg'
-        />
+        <div className='h-3/5 w-full'>
+        <LiveTracking/></div>
       </div>
       <div className='flex flex-col justify-end h-screen absolute top-0 w-full'>
         <div className='h-[30%] p-5 relative'>
@@ -221,12 +273,12 @@ const Home = () => {
                 type='text'
                 placeholder='Enter your destination'
               />
-              </form>
               <button
               className='bg-black text-white font-semibold py-2 px-4 rounded-lg w-full mt-3 shadow-md hover:bg-yellow-600 transition-all duration-300'
              onClick={findtrip} >
               Find Ride
               </button>
+              </form>
             </div>
             <div ref={panelRef} className='p-5 mt-5 '>
               <LocationSearchPanel
@@ -262,7 +314,7 @@ const Home = () => {
         className='fixed z-10  w-full flex flex-col gap-2 bg-white bottom-0 px-3 py-6'
         ref={waitingRef}
       >
-        <WaitForCaptain setWaiting={setWaiting} waitingRef={waitingRef} />
+        <WaitForCaptain setWaiting={setWaiting} waitingRef={waitingRef} ride={ride} />
       </div>
       <div
         className='fixed z-10 translate-y-full w-full flex flex-col gap-2 bg-white bottom-0 px-3 py-6'

@@ -26,6 +26,7 @@ const UserLogin = () => {
       const data=await response.data;
       setUser(data.user);
       localStorage.setItem('token',data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
       navigate('/home');
     }
     //this will reset the email and password as we will submit

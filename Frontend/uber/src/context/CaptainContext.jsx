@@ -3,7 +3,10 @@ import React, { createContext, useState } from 'react'
 //import { UserDataContext } from './UserContext';
 export const CaptainDataContext=createContext();
 const CaptainContext = ({children}) => {
-  const [captain,setCaptain]=useState({});
+  const [captain,setCaptain]=useState(()=>{
+    const stored = localStorage.getItem('captain');
+  return stored ? JSON.parse(stored) : null;
+});
   return (
     <>
     <CaptainDataContext.Provider value={{captain,setCaptain}}>

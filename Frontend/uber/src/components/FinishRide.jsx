@@ -1,8 +1,9 @@
+import axios from 'axios';
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 
 const FinishRide = (props) => {
-    const navigate=useNavigate();
+    const navigate = useNavigate();
   return (
     <div>
        <h5 className='ml-[85%] absolute' onClick={()=>{
@@ -17,28 +18,35 @@ const FinishRide = (props) => {
               <div className='flex items-center border-b-2 border-gray-200 gap-5 p-3'>
               <i className="text-lg ri-map-pin-2-fill"></i>
               <div>
-                <h3 className='text-lg font-medium'>562/11-A</h3>
-                <p className='text-base -mt-1 text-gray-600'>Kankariya Talab,Ahmedabad</p>
+                <h3 className='text-lg font-medium'>{props.newRide?.pickup}</h3>
+                <p className='text-base -mt-1 text-gray-600'>{props.newRide?.pickup}</p>
               </div>
               </div>
               <div className='flex items-center border-b-2 border-gray-200 gap-5 p-3'>
               <i className   ="ri-currency-line"></i>
               <div>
-                <h3 className='text-lg font-medium'>Rs.193.20</h3>
+                <h3 className='text-lg font-medium'>Rs.{props.newRide?.fare}</h3>
                 <p className='text-base -mt-1 text-gray-600'>Cash</p>
               </div>
               </div>
               <div className='flex items-center gap-5 p-3'>
               <i className="text-lg ri-map-pin-2-fill"></i>
               <div>
-                <h3 className='text-lg font-medium'>562/11-A</h3>
-                <p className='text-base -mt-1 text-gray-600'>Kankariya Talab,Ahmedabad</p>
+                <h3 className='text-lg font-medium'>{props.newRide?.destination}</h3>
+                <p className='text-base -mt-1 text-gray-600'>{props.newRide?.destination}</p>
               </div>
               </div>
               </div>
               </div>
               <button className='w-full bg-green-600 font-semibold p-2 rounded-lg'
-              onClick={()=>{
+              onClick={async()=>{
+                const response=await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/end-ride`,{
+                  rideId:props.newRide._id
+                },{
+                  headers:{
+                    Authorization:`Bearer ${localStorage.getItem('token')}`
+                  }
+                })
                 navigate('/captain-home')
               }} 
                

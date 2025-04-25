@@ -3,13 +3,10 @@ import { createContext } from 'react';
 export const UserDataContext=createContext(null);
 
 const UserContext = ({children}) => {
-    const [user, setUser] = useState({
-        email:'',
-        fullName:{
-            firstName:'',
-            lastName:''
-        }
-    })
+    const [user, setUser] = useState(() => {
+  const stored = localStorage.getItem('user');
+  return stored ? JSON.parse(stored) : null;
+});
     
   return ( 
     <div>

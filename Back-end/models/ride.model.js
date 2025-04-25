@@ -49,7 +49,8 @@ const rideSchema=new mongoose.Schema({//ride schema is an object of mongoose Sch
         required:true
     }
 })
-module.exports=mongoose.model('ride',rideSchema);//type of a model is an object
+const rideModel=mongoose.model('ride',rideSchema);
+module.exports=rideModel//type of a model is an object
 // Mongoose Model vs. Collection vs. ref – Summary
 // 🔹 mongoose.model('User', userSchema)
 // 'User' is the model name (case-sensitive).

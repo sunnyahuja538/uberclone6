@@ -1,14 +1,22 @@
 import { useGSAP } from '@gsap/react';
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import FinishRide from '../components/FinishRide';
+import LiveTracking from '../components/LiveTracking';
 
 
 
 const CaptainRiding = () => {
+  const [newRide, setNewRide] = useState();
+  const location = useLocation();
+useEffect(()=>{
+  console.log("Location state:", location.state);
+  setNewRide(location?.state?.ride);
+},[])
+console.log("Ride data:", newRide);
 
-
+  
 
   const [finishRidePanel, setFinishRidePanel] = useState(false);
   const finishRidePanelRef = useRef(null)
@@ -40,7 +48,7 @@ const CaptainRiding = () => {
       </div>
       </div>
         <div className='h-[80%]'>
-            <img className="h-full w-full object-cover" src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif"/>
+          <LiveTracking/>
         </div>
         <div className='h-[20%] w-screen relative bg-yellow-400 flex flex-col justify-evenly items-center'onClick={()=>{
           setFinishRidePanel(true);
@@ -58,7 +66,7 @@ const CaptainRiding = () => {
           </div>
     
     <div className='fixed h-screen w-full flex flex-col gap-2 translate-y-full bg-white bottom-0 px-3 py-6' ref={finishRidePanelRef} >
-                <FinishRide setFinishRidePanel={setFinishRidePanel}  />
+                <FinishRide setFinishRidePanel={setFinishRidePanel} newRide={newRide}  />
                   </div> 
         </div>
   )

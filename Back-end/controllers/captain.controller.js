@@ -59,9 +59,7 @@ module.exports.loginCaptain=async (req,res,next)=>{
         }) 
     }
     const token=captain.generateAuthToken();
-    res.cookie('token',token,{
-        httpOnly:false
-    });
+    res.cookie('token',token);
     //localStorage.setItem('token',token);
     res.status(200).json({token,captain});
 }

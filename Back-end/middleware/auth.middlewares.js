@@ -36,11 +36,13 @@ module.exports.authCaptain= async (req,res,next)=>{
     }
     const isBlacklisted=await blacklistTokenModel.findOne({token:token});
     if(isBlacklisted){
-        res.status(401).json({
+        return res.status(401).json({
             message:'Unauthorised'
         })
     }
     try{
+        
+
         const decoded=jwt.verify(token,process.env.JWT_SECRET);
         const captain= await captainModel.findById(decoded._id);
         req.captain=captain;//set user in the request
