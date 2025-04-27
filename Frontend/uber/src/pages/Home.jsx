@@ -89,7 +89,7 @@ const Home = () => {
   {
           setVehicle(true);
           setPanel(false);
-          const response=await axios.get(`${import.meta.env.VITE_BACKEND_URL}/rides/get-fare`,{
+          const response=await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/get-fare`,{
             params:{
               pickup,
               destination
@@ -103,7 +103,7 @@ const Home = () => {
   }
   const createRide=async()=>{
     console.log('Token:', localStorage.getItem('token'));
-    const response=await axios.post(`${import.meta.env.VITE_BACKEND_URL}/rides/create`,
+    const response=await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/create`,
       {
         pickup,
         destination,
@@ -125,7 +125,7 @@ const Home = () => {
       {
         return;
       }
-      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/maps/get-suggestions?input=${query}`,{
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/maps/get-suggestions?input=${query}`,{
         headers:{
           Authorization:`Bearer ${localStorage.getItem('token')}`/*You always need to manually pass the token in the headers when using fetch, axios, or any HTTP client — unless you're using a library or browser mechanism that handles it for you (like cookies with HttpOnly flags).*/
         }

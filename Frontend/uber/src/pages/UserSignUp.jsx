@@ -39,7 +39,7 @@ useEffect runs after the component has updated (i.e., after the re-render caused
           email,
           password
       }
-      const response=await axios.post(`${import.meta.env.VITE_BACKEND_URL}/users/register`,newUser );
+      const response=await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`,newUser );
       if(response.status===201 )
       {
         const data=await response.data;

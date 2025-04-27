@@ -40,7 +40,7 @@ const FinishRide = (props) => {
               </div>
               <button className='w-full bg-green-600 font-semibold p-2 rounded-lg'
               onClick={async()=>{
-                const response=await axios.post(`${import.meta.env.VITE_BACKEND_URL}/rides/end-ride`,{
+                const response=await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/end-ride`,{
                   rideId:props.newRide._id
                 },{
                   headers:{
