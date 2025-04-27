@@ -29,9 +29,9 @@ const CaptainHome = () => {
         userType:"captain",
         userId:captain._id
       })
-      const updateLocation = () => {
+      const updateLocation = async() => {
         if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition((position) => {
+          navigator.geolocation.getCurrentPosition(async (position) => {
         const { latitude, longitude } = position.coords;
         console.log({
           userId: captain._id,

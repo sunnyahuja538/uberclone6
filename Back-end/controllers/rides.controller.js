@@ -22,7 +22,7 @@ module.exports.createRide=async (req,res)=>{
        //console.log(ride);
         const pickupCoordinates=await mapsService.getAddressCoordinates(pickup);
         //console.log(pickupCoordinates);
-        const captainsInTheRadius=await mapsService.getCaptainsInTheRadius(pickupCoordinates.latitude,pickupCoordinates.longitude,2);
+        const captainsInTheRadius=await mapsService.getCaptainsInTheRadius(pickupCoordinates.latitude,pickupCoordinates.longitude,10);
         //console.log(captainsInTheRadius);
         ride.otp="";
         const newRide= await rideModel.findOne({_id:ride?._id}).populate('user')//It’s used to automatically replace a referenced ObjectId in a document with the actual document it points to.
