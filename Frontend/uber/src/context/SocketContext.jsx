@@ -1,7 +1,9 @@
 import React, { createContext, useEffect, useState } from 'react'
 import {io} from 'socket.io-client'
 export const SocketContextData=createContext();
-const socket=io(`${import.meta.env.VITE_BACKEND_URL}`)
+const socket=io(`${import.meta.env.VITE_BACKEND_URL}`,{
+    transports: ['websocket']
+})
 const SocketContext = ({children}) => {
    
     //initialize client connection run only when component mount.
