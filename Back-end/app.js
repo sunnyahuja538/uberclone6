@@ -9,7 +9,9 @@ const { cookie } = require('express-validator');
 const mapRoutes=require('./routes/maps.route.js');
 const ridesRoutes=require('./routes/rides.routes.js');
 connectDB();
-app.use(cors());
+app.use(cors({
+    origin: '*' // Allow all origins
+  }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({extended:true}));
