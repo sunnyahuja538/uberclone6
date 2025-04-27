@@ -107,7 +107,7 @@ module.exports.startRide=async({rideId,otp,captain})=>{
     const ride=await rideModel.findOneAndUpdate({
         _id:rideId
     },{
-        captain:captain._id
+        captain:captain?._id
     },{new:true}).populate('user').populate('captain').select('+otp');
     if(!ride)
     {

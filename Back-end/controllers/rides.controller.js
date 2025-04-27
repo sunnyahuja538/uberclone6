@@ -16,7 +16,7 @@ module.exports.createRide=async (req,res)=>{
     const {pickup,destination,vehicleType}=req.body;
     
     try{
-        let ride=await rideService.createRide({user:req.user._id,pickup,destination,vehicleType});
+        let ride=await rideService.createRide({user:req?.user?._id,pickup,destination,vehicleType});
         res.status(201).json(ride);
 
        //console.log(ride);
@@ -25,7 +25,7 @@ module.exports.createRide=async (req,res)=>{
         const captainsInTheRadius=await mapsService.getCaptainsInTheRadius(pickupCoordinates.latitude,pickupCoordinates.longitude,2);
         //console.log(captainsInTheRadius);
         ride.otp="";
-        const newRide= await rideModel.findOne({_id:ride._id}).populate('user')//It’s used to automatically replace a referenced ObjectId in a document with the actual document it points to.
+        const newRide= await rideModel.findOne({_id:ride?._id}).populate('user')//It’s used to automatically replace a referenced ObjectId in a document with the actual document it points to.
         console.log('hello');
         captainsInTheRadius.map( (captain)=>{
             //console.log(captain.socketId)
