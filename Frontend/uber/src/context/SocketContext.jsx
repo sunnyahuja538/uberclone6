@@ -2,7 +2,10 @@ import React, { createContext, useEffect, useState } from 'react'
 import {io} from 'socket.io-client'
 export const SocketContextData=createContext();
 const socket=io(`${import.meta.env.VITE_BACKEND_URL}`,{
-    transports: ['websocket']
+    transports: ['websocket'],
+    reconnection: true,
+    reconnectionAttempts: 5, // how many times to retry
+    reconnectionDelay: 1000, // wait 1 sec before retry
 })
 const SocketContext = ({children}) => {
    
