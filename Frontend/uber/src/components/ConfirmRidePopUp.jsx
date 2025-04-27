@@ -11,7 +11,7 @@ const ConfirmRidePopUp = (props) => {
       console.log("ride:",props.ride);
       e.preventDefault()
 
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/start-ride`, {
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/rides/start-ride`, {
           params: {
               rideId: props.ride._id,
               otp: otp
